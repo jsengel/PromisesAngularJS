@@ -1,4 +1,4 @@
-app.controller('ExampleFourCtrl', [ '$scope', 'PromiseService', function($scope, PromiseService) {
+app.controller('ExampleFiveCtrl', [ '$scope', 'PromiseService', function($scope, PromiseService) {
 
 	$scope.promises = [];
 
@@ -12,10 +12,14 @@ app.controller('ExampleFourCtrl', [ '$scope', 'PromiseService', function($scope,
 	};
 
 	$scope.generateCombinedPromises = function(futurePromises) {
-		$scope.promise = {};
+		$scope.promise = {
+			number : 0
+		};
 
 		angular.forEach(futurePromises, function(value, key) {
-			$scope.promises[key] = PromiseService.getPromise((value.delay || 0) * 1000);
+			$scope.promises[key] = PromiseService.getRecursivePromise(value.number || 0);
+			$scope.promises[key].number = value.number;
+			$scope.promise.number += value.number;
 
 			$scope.promises[key].then(function(value) {
 				$scope.promises[key].result = value;
@@ -23,7 +27,8 @@ app.controller('ExampleFourCtrl', [ '$scope', 'PromiseService', function($scope,
 			}, function(reason) {
 				$scope.promises[key].result = reason;
 			}, function(value) {
-				$scope.promises[key].result = (value / 1000) + " seconds to process...";
+				$scope.promises[key].result = value + " promises left...";
+				$scope.promises[key].progress = (($scope.promises[key].number - value) * (100 / $scope.promises[key].number)) || 0;
 			});
 		});
 

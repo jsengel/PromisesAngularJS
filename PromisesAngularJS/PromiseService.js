@@ -24,7 +24,6 @@ app.service('PromiseService', [ '$q', '$timeout', function($q, $timeout) {
 		}, 0);
 
 		var delay = Math.floor((Math.random() * 10) + 1) * 200;
-		console.log(delay);
 
 		$timeout(function() {
 			if (number > 1) {
